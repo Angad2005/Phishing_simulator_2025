@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Create Campaign - Phishing Simulation Tool{% endblock %}
+
+{% block content %}
+    <h1>Create New Phishing Campaign</h1>
+    <form method="POST">
+        <div>
+            <label for="name">Campaign Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+            <label for="subject">Email Subject:</label>
+            <input type="text" id="subject" name="subject" required>
+        </div>
+        <div>
+            <label for="email_body">Email Body (HTML accepted, use `{{tracking_link}}` for the clickable link):</label>
+            <textarea id="email_body" name="email_body" rows="15" required style="width: 100%;">
+<p>Dear {{name}},</p>
+<p>We've detected unusual activity on your account. Please click the link below to verify your details immediately to avoid account suspension.</p>
+<p><a href="{{tracking_link}}">Click here to verify your account</a></p>
+<p>Sincerely,</p>
+<p>Your IT Security Team</p>
+            </textarea>
+        </div>
+        <div>
+            <label>Select Employees for this Campaign:</label>
+            {% if employees %}
+                {% for employee in employees %}
+                    <div>
+                        <input type="checkbox" id="employee_{{ employee.id }}" name="employees" value="{{ employee.id }}">
+                        <label for="employee_{{ employee.id }}">{{ employee.name }} ({{ employee.email }})</label>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No employees added yet. Please <a href="{{ url_for('add_employee') }}">add employees</a> first.</p>
+            {% endif %}
+        </div>
+        <input type="submit" value="Create Campaign">
+    </form>
+{% endblock %}
