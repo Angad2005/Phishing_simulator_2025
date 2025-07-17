@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Reports - Phishing Simulation Tool{% endblock %}
+
+{% block content %}
+    <h1>Phishing Campaign Reports</h1>
+
+    <h2>Campaign Summaries</h2>
+    {% if campaign_summaries %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Campaign Name</th>
+                    <th>Emails Sent</th>
+                    <th>Total Clicks</th>
+                    <th>Click Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for summary in campaign_summaries %}
+                    <tr>
+                        <td>{{ summary.name }}</td>
+                        <td>{{ summary.total_sent }}</td>
+                        <td>{{ summary.total_clicks }}</td>
+                        <td>{{ summary.click_rate }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No campaign data to display yet.</p>
+    {% endif %}
+
+    <h2>Detailed Click Logs</h2>
+    {% if click_data %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Campaign</th>
+                    <th>Employee Name</th>
+                    <th>Employee Email</th>
+                    <th>Clicked At</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for click in click_data %}
+                    <tr>
+                        <td>{{ click.name }}</td>
+                        <td>{{ click.name_1 }}</td> {# This might be ambiguous, better to use click.employee.name if joined directly #}
+                        <td>{{ click.email }}</td>
+                        <td>{{ click.clicked_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ click.ip_address }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No clicks recorded yet.</p>
+    {% endif %}
+
+    <h2>Suggestions for Improving Awareness</h2>
+    {% if suggestions %}
+        <ul>
+            {% for suggestion in suggestions %}
+                <li>{{ suggestion }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Run campaigns to get insights and suggestions!</p>
+    {% endif %}
+{% endblock %}

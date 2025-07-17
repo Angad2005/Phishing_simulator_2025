@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Phishing Simulation Tool{% endblock %}
+
+{% block content %}
+    <h1>Welcome to the Phishing Simulation Tool</h1>
+
+    <h2>Campaigns</h2>
+    {% if campaigns %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for campaign in campaigns %}
+                    <tr>
+                        <td>{{ campaign.name }}</td>
+                        <td>{{ campaign.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <form action="{{ url_for('send_campaign', campaign_id=campaign.id) }}" method="POST" style="display:inline-block;">
+                                <button type="submit" onclick="return confirm('Are you sure you want to send this campaign?');">Send Campaign</button>
+                            </form>
+                            <a href="{{ url_for('view_campaign', campaign_id=campaign.id) }}" class="button" style="display:inline-block; margin-left: 5px;">View/Manage</a>
+                            <form action="{{ url_for('delete_campaign', campaign_id=campaign.id) }}" method="POST" style="display:inline-block;">
+                                <button type="submit" onclick="return confirm('Are you sure you want to DELETE this campaign and all its associated data (clicks, sent history)? This cannot be undone.');" style="background-color: #dc3545;">Delete Campaign</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No campaigns created yet. <a href="{{ url_for('create_campaign') }}">Create your first campaign!</a></p>
+    {% endif %}
+
+    <h2 style="margin-top: 30px;">Employees</h2>
+    {% if employees %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                    <tr>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.email }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_employee', employee_id=employee.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" onclick="return confirm('Are you sure you want to DELETE employee {{ employee.name }}? This will also delete any campaign assignments and click data associated with this employee. This cannot be undone.');" style="background-color: #dc3545;">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No employees added yet. <a href="{{ url_for('add_employee') }}">Add employees to get started!</a></p>
+    {% endif %}
+{% endblock %}
